@@ -16,9 +16,23 @@ namespace PercentCurly.Services
             this.httpClient = httpClient;
         }
 
-        public Task<IEnumerable<Repo>> GetUserRepos(string username)
+        public async IAsyncEnumerable<RepoFile> GetFiles(string owner, string repo, string path = "")
         {
-            return Get<IEnumerable<Repo>>($"/users/{username}/repos");
+            var listing = await Get<RepoFile[]>($"/repos/{owner}/{repo}/contents/{path}");
+            foreach (var file in listing)
+            {
+                if (file.Type == "file")
+                {
+                    yield return file;
+                }
+                else if (file.Type == "dir")
+                {
+                    await foreach (var subFile in GetFiles(owner, repo, file.Path))
+                    {
+                        yield return subFile;
+                    }
+                }
+            }
         }
 
         private async Task<TResponse> Get<TResponse>(string path)
@@ -29,8 +43,10 @@ namespace PercentCurly.Services
         }
     }
 
-    public class Repo
+    public class RepoFile
     {
-        public string Name { get; set; }
+        public string Type { get; set; }
+        public string Path { get; set; }
+        public string Content { get; set; }
     }
 }

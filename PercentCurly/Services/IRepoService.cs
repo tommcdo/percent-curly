@@ -5,6 +5,6 @@ namespace PercentCurly.Services
 {
     public interface IRepoService
     {
-        Task<IEnumerable<Repo>> GetUserRepos(string username);
+        IAsyncEnumerable<RepoFile> GetFiles(string owner, string repo, string path = "");
     }
 }
