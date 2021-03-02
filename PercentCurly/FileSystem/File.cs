@@ -5,19 +5,19 @@ namespace PercentCurly.FileSystem
 {
     public class File
     {
-        private readonly IPath _path;
-        private readonly IBuffer _buffer;
+        private readonly IPath path;
+        private readonly IBuffer buffer;
 
         public File(IPath path, IBuffer buffer)
         {
-            _path = path;
-            _buffer = buffer;
+            this.path = path;
+            this.buffer = buffer;
         }
 
         public async Task WriteAsync()
         {
-            var file = await _path.AsStreamWriter();
-            var buffer = await _buffer.GetAsync();
+            var file = await path.AsStreamWriter();
+            var buffer = await this.buffer.GetAsync();
             string line = await buffer.ReadLineAsync();
             while (line != null)
             {

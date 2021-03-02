@@ -9,11 +9,11 @@ namespace PercentCurly.Services
 {
     public class RepoService : IRepoService
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient httpClient;
 
         public RepoService(HttpClient httpClient)
         {
-            _httpClient = httpClient;
+            this.httpClient = httpClient;
         }
 
         public Task<IEnumerable<Repo>> GetUserRepos(string username)
@@ -23,7 +23,7 @@ namespace PercentCurly.Services
 
         private async Task<TResponse> Get<TResponse>(string path)
         {
-            var response = await _httpClient.GetAsync(path);
+            var response = await httpClient.GetAsync(path);
             var content = await response.Content.ReadAsStringAsync();
             return JsonConvert.DeserializeObject<TResponse>(content);
         }

@@ -11,17 +11,17 @@ namespace PercentCurly
 
     public class Application : IApplication
     {
-        private readonly IRepoService _repoService;
+        private readonly IRepoService repoService;
 
         public Application(IRepoService repoService)
         {
-            _repoService = repoService;
+            this.repoService = repoService;
         }
 
         public async Task StartAsync()
         {
             Console.WriteLine("Hello world!");
-            var repos = await _repoService.GetUserRepos("tommcdo");
+            var repos = await repoService.GetUserRepos("tommcdo");
             foreach (var repo in repos)
             {
                 Console.WriteLine($"- {repo.Name}");
