@@ -7,11 +7,6 @@ using Newtonsoft.Json;
 
 namespace PercentCurly.Services
 {
-    public interface IRepoService
-    {
-        Task<IEnumerable<Repo>> GetUserRepos(string username);
-    }
-
     public class RepoService : IRepoService
     {
         private readonly HttpClient _httpClient;

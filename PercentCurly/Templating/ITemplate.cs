@@ -1,7 +1,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace PercentCurly.FileSystem
+namespace PercentCurly.Templating
 {
     public interface ITemplate
     {
