@@ -1,9 +1,8 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 
 namespace PercentCurly.Services
 {
@@ -39,14 +38,19 @@ namespace PercentCurly.Services
         {
             var response = await httpClient.GetAsync(path);
             var content = await response.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<TResponse>(content);
+            return JsonSerializer.Deserialize<TResponse>(content);
         }
     }
 
     public class RepoFile
     {
+        [JsonPropertyName("type")]
         public string Type { get; set; }
+
+        [JsonPropertyName("path")]
         public string Path { get; set; }
+
+        [JsonPropertyName("content")]
         public string Content { get; set; }
     }
 }
