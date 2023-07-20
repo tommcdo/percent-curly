@@ -16,12 +16,12 @@ namespace PercentCurly.Templating.Case
             return name.Contains(delimiter);
         }
 
-        public Word[] SplitToWords(string name)
+        public Word[] Read(string name)
         {
             return name.Split(delimiter).Select(word => new Word(word)).ToArray();
         }
 
-        public string Apply(Word[] words)
+        public string Write(Word[] words)
         {
             return string.Join(delimiter, words.Select(EachWord).ToArray());
         }

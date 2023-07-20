@@ -19,6 +19,11 @@ namespace PercentCurly.Templating
                 EqualityComparer<Word[]>.Default.Equals(words, placeholderName.words);
         }
 
+        public string TransformCase(ICaseStrategy caseStrategy)
+        {
+            return caseStrategy.Write(words);
+        }
+
         public override int GetHashCode()
         {
             return HashCode.Combine(words);

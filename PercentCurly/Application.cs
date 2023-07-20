@@ -21,10 +21,10 @@ namespace PercentCurly
         public async Task StartAsync()
         {
             Console.WriteLine("Hello world!");
-            var repos = repoService.GetFiles("tommcdo", "kohana-twig");
-            await foreach (var repo in repos)
+            var files = repoService.GetFiles("tommcdo", "kohana-twig");
+            await foreach (var file in files)
             {
-                Console.WriteLine($"- {repo.Path}");
+                Console.WriteLine($"- {file.Path}");
             }
         }
     }
