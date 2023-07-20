@@ -5,50 +5,26 @@ using System.Text;
 
 namespace PercentCurly.FileSystem;
 
-public class ReadOnlyStream : Stream
+public class TemplatedStream : ByteStream
 {
-    private readonly IEnumerator<byte> bytes;
+    private readonly Lazy<IEnumerable<byte>> _bytes;
 
-    public ReadOnlyStream(IEnumerable<byte> bytes)
-    {
-        this.bytes = bytes.GetEnumerator();
-    }
-
-    public override bool CanRead => true;
-
-    public override bool CanSeek => false;
-
-    public override bool CanWrite => false;
-
-    public override long Length => throw new NotImplementedException();
-
-    public override long Position { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-    public override void Flush() => throw new NotImplementedException();
-
-    public override int Read(byte[] buffer, int offset, int count)
-    {
-        int i = 0;
-        for (; i < count && bytes.MoveNext(); i++)
-        {
-            buffer[offset + i] = bytes.Current;
-        }
-        return i;
-    }
-
-    public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
-
-    public override void SetLength(long value) => throw new NotImplementedException();
-
-    public override void Write(byte[] buffer, int offset, int count) => throw new NotImplementedException();
-}
-
-public class TemplatedStream : ReadOnlyStream
-{
     public TemplatedStream(Stream stream, IPlaceholderResolver placeholderResolver)
-        : base(CharsToBytes(ProcessStream(stream, placeholderResolver)))
     {
+        if (stream == null)
+        {
+            throw new ArgumentNullException(nameof(stream));
+        }
+
+        if (placeholderResolver == null)
+        {
+            throw new ArgumentNullException(nameof(placeholderResolver));
+        }
+
+        _bytes = new Lazy<IEnumerable<byte>>(() => CharsToBytes(ProcessStream(stream, placeholderResolver)));
     }
+
+    protected override IEnumerable<byte> Bytes => _bytes.Value;
 
     private static IEnumerable<byte> CharsToBytes(IEnumerable<char> chars)
     {
@@ -114,17 +90,5 @@ public class TemplatedStream : ReadOnlyStream
             }
             yield return '\n';
         }
-    }
-}
-
-internal static class CharEnumeratorExtensions
-{
-    internal static bool MoveNextOrThrow(this CharEnumerator chars, Exception e)
-    {
-        if (!chars.MoveNext())
-        {
-            throw e;
-        }
-        return true;
     }
 }
